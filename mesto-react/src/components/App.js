@@ -6,12 +6,50 @@ import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
+
+import { api } from '../utils/Api';
+
+
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState({
+    isOpen: false,
+    name: "",
+    link: ""
+  });
+  
+  // Открытие ImagePopup
+  function handleCardClick(card) {
+    setSelectedCard({
+      isOpen: true,
+      name: card.name,
+      link: card.link
+    })
+  } 
 
+  // Закрытие попапов
+  function closeAllPopups() {
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
+    setSelectedCard({
+      isOpen: false,
+      name: "",
+      link: ""
+    })
+  }
+
+  // Закрытие на оверлей
+  function closePopupOnOverley(evt) {
+    if (evt.target === evt.currentTarget) {
+      closeAllPopups();
+    }
+  }
+
+  // Открытие попапа
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
     
@@ -32,11 +70,14 @@ function App() {
     <Main
       onEditProfile={handleEditProfileClick}
       onAddPlace={handleAddPlaceClick}
-      onEditAvatar={handleEditAvatarClick} />
-    <Footer />
+      onEditAvatar={handleEditAvatarClick}
+      onCardClick={handleCardClick} />
+    
 
     <PopupWithForm
     isOpen={isEditProfilePopupOpen}
+    onClose={closeAllPopups}
+    onCloseOverlay={closePopupOnOverley}
     name="edit-profile"
     title="Редактировать профиль"
     buttontitle="Сохранить"
@@ -70,6 +111,8 @@ function App() {
 
     <PopupWithForm
     isOpen={isAddPlacePopupOpen}
+    onClose={closeAllPopups}
+    onCloseOverlay={closePopupOnOverley}
     name="add-card"
     title="Новое место"
     buttontitle="Создать"
@@ -122,6 +165,8 @@ function App() {
 
     <PopupWithForm
     isOpen={isEditAvatarPopupOpen}
+    onClose={closeAllPopups}
+    onCloseOverlay={closePopupOnOverley}
     name="update-avatar"
     title="Обновить аватар"
     buttontitle="Сохранить"
@@ -149,21 +194,16 @@ function App() {
       </div>
 </section>*/}
 
-    <ImagePopup />
+    <ImagePopup
+    
+    card={selectedCard}
+    onClose={closeAllPopups}
+    onCloseOverlay={closePopupOnOverley}
+     />
 
-    <template className="cards">
-      <article className="elements__item">
-        <button type="button" className="elements__trash"></button>
-        <img className="elements__image" src="#" alt="#"/>
-        <div className="elements__caption">
-          <h2 className="elements__title"></h2>
-          <div className="elements__like-container">
-            <button type="button" className="elements__like"></button>
-            <span className="elements__like-count"></span>
-          </div>
-        </div>
-      </article>
-    </template>
+    
+
+  <Footer />  
   </div>
 </body>
   );
