@@ -192,7 +192,8 @@ function App() {
           <button disabled type="submit" className="popup__submit popup__submit-update-avatar popup__submit_disabled">Сохранить</button>
         </form>
       </div>
-</section>*/}
+</section>*/
+}
 
     <ImagePopup
     
