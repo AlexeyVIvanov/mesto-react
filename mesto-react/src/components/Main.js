@@ -1,6 +1,5 @@
 import React from 'react';
 
-import avatar from '../images/avatar.jpg';
 import editButton from '../images/edit-button.svg';
 import addButton from '../images/add-button.svg';
 import editAvatar from '../images/edit-avatar.svg';
@@ -19,13 +18,11 @@ function Main(props) {
 
   React.useEffect(() => {
     api.getInitialCards(cards)
-      .then((cards) => {
-        console.log('cards', cards);
-        setCards(cards)
-      
+      .then((cards) => {        
+        setCards(cards)      
       })    
   },
-  []); 
+  [cards]); 
 
   React.useEffect(() => {
     api.getProfile()
@@ -41,9 +38,7 @@ function Main(props) {
   return (
     <main>
       <section className="profile">
-
         <img  className="profile__overlay" src={editAvatar} alt="Карандаш"/>
-
         <img style={{ backgroundImage: `url(${userAvatar})` }} onClick={props.onEditAvatar} className="profile__avatar" src={userAvatar} alt="Аватар"/>
         <div className="profile__info">
           <div className="profile__container">
@@ -63,6 +58,7 @@ function Main(props) {
       {/*<template className="cards">*/}        
         {cards.map((card) => (
         <Card {...card} key={card._id}
+        card={card}
         onImagePopup={props.onCardClick}
          />
         ))
