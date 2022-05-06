@@ -77,7 +77,7 @@ function App() {
       onCloseOverlay={closePopupOnOverley}    
       name="edit-profile"
       title="Редактировать профиль"
-      buttontitle="Сохранить"
+      buttonTitle="Сохранить"
       children={
       <>
           <fieldset className="popup__input-container">
@@ -96,7 +96,7 @@ function App() {
       onCloseOverlay={closePopupOnOverley}
       name="add-card"
       title="Новое место"
-      buttontitle="Создать"
+      buttonTitle="Создать"
       children={
       <>
           <fieldset className="popup__input-container">
@@ -112,7 +112,7 @@ function App() {
     <PopupWithForm
       name="delete-confirm"
       title="Вы уверены?"
-      buttontitle="Да"
+      buttonTitle="Да"
       children={
       <>
       </>
@@ -124,7 +124,7 @@ function App() {
       onCloseOverlay={closePopupOnOverley}
       name="update-avatar"
       title="Обновить аватар"
-      buttontitle="Сохранить"
+      buttonTitle="Сохранить"
       children={
       <>
           <fieldset className="popup__input-container">
