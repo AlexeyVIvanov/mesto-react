@@ -8,13 +8,47 @@ import { api } from '../utils/Api';
 
 import Card from './Card';
 
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+
 function Main(props) {
+
+  const currentUser = React.useContext(CurrentUserContext);
   
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
+  //const [userName, setUserName] = React.useState('');
+  //const [userDescription, setUserDescription] = React.useState('');
+  //const [userAvatar, setUserAvatar] = React.useState('');
 
   const [cards, setCards] = React.useState([]);
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  //function handleCardDelete(card) {
+    // Определяем, являемся ли мы владельцем текущей карточки
+  //  const isOwn = card.owner._id === currentUser._id;
+    
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+   // api.deleteConfirmCard(card._id, !isOwn).then((newCard) => {
+  //      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+  //  });
+  //}
+  const handleCardDelete = (card) => {
+    api.deleteConfirmCard(card._id, !isOwn)
+      .then(() => {
+        setCards((cardState) => {
+          return {  
+            cardState: cardState.filter((c) => c._id !== card._id)
+          }
+        });
+      });
+  }
 
   React.useEffect(() => {
     api.getInitialCards()
@@ -24,7 +58,7 @@ function Main(props) {
   },
   []); 
 
-  React.useEffect(() => {
+  {/*React.useEffect(() => {
     api.getProfile()
       .then((data) => {
         
@@ -33,37 +67,38 @@ function Main(props) {
         setUserAvatar(data.avatar)
       })    
   },
-  []); 
+[]); */}
   
   return (
     <main>
       <section className="profile">
         <img  className="profile__overlay" src={editAvatar} alt="Карандаш"/>
-        <img style={{ backgroundImage: `url(${userAvatar})` }} onClick={props.onEditAvatar} className="profile__avatar" src={userAvatar} alt="Аватар"/>
+        <img style={{ backgroundImage: `url(${currentUser.avatar})` }} onClick={props.onEditAvatar} className="profile__avatar" src={currentUser.avatar} alt="Аватар"/>
         <div className="profile__info">        
           <div className="profile__container">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button onClick={props.onEditProfile} type="button" className="profile__edit-button">
               <img src={editButton} alt="Кнопка редактирования"/>
             </button>
           </div>
-          <p className="profile__subtitle">{userDescription}</p>
+          <p className="profile__subtitle">{currentUser.about}</p>
         </div>
         <button onClick={props.onAddPlace} type="button" className="profile__add-button">
           <img src={addButton} alt="Кнопка добавления"/>
         </button>
       </section>
       <section className="elements">
-        {/* UL?????????? */}
-      {/*<template className="cards">*/}        
+                
         {cards.map((card) => (
         <Card {...card} key={card._id}
         card={card}
         onImagePopup={props.onCardClick}
+        onCardLike={handleCardLike}
+        onCardDelete={handleCardDelete}
          />
         ))
         }
-      {/*</template> */}
+      
       </section>
     </main>
   );

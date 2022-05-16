@@ -5,7 +5,10 @@ import Header from './Header';
 import Main from './Main';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-
+import { api } from '../utils/Api';
+// Импортируем объект контекста
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
 
@@ -17,6 +20,16 @@ function App() {
     name: "",
     link: ""
   });
+// параметры???????
+  const [currentUser, setCurrentUser] = React.useState('');
+
+React.useEffect(() => {
+  api.getProfile()
+    .then((data) => {      
+      setCurrentUser(data)      
+    })    
+},
+[]);
   
   // Открытие ImagePopup
   function handleCardClick(card) {
@@ -60,90 +73,87 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleUpdateUser(name, about) {
+    api.editProfile(name, about)
+    .then((data) => {      
+      setCurrentUser(data) 
+      closeAllPopups()     
+    })
+  }
+
   return (
   <div className="root common">
     <div className="page">
-    <Header />
-    <Main
-      onEditProfile={handleEditProfileClick}
-      onAddPlace={handleAddPlaceClick}
-      onEditAvatar={handleEditAvatarClick}
-      onCardClick={handleCardClick} />
-    
+        {/* или [currentUser]? */}
+      <CurrentUserContext.Provider value={currentUser}>
+        <Header />
+        <Main
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick} />    
 
-    <PopupWithForm
-      isOpen={isEditProfilePopupOpen}
-      onClose={closeAllPopups}
-      onCloseOverlay={closePopupOnOverley}    
-      name="edit-profile"
-      title="Редактировать профиль"
-      buttonTitle="Сохранить"
-      children={
-      <>
-          <fieldset className="popup__input-container">
-            <input  className="popup__input" id="popup__input-name" type="text" name="name" defaultValue="" minLength="2" maxLength="40" placeholder="Имя" required/>
-            <span className="popup__input-error popup__input-name-error"></span>
-            <input className="popup__input" id="popup__input-profession" type="text" name="profession" defaultValue="" minLength="2" maxLength="200" placeholder="Профессия" required/>
-            <span className="popup__input-error popup__input-profession-error" ></span>
-          </fieldset>
-      </>
-    }
-     />    
+        <EditProfilePopup
+         isOpen={isEditProfilePopupOpen}
+         onClose={closeAllPopups}
+         onCloseOverlay={closePopupOnOverley}
+         onUpdateUser={handleUpdateUser} />    
 
-    <PopupWithForm
-      isOpen={isAddPlacePopupOpen}
-      onClose={closeAllPopups}
-      onCloseOverlay={closePopupOnOverley}
-      name="add-card"
-      title="Новое место"
-      buttonTitle="Создать"
-      children={
-      <>
-          <fieldset className="popup__input-container">
-            <input  className="popup__input" id="popup__input-place" type="text" name="place" defaultValue="" minLength="2" maxLength="30" placeholder="Название" required/>
-            <span className="popup__input-error popup__input-place-error" ></span>
-            <input className="popup__input" id="popup__input-link" type="url" name="link" defaultValue="" placeholder="Ссылка на картинку" required/>
-            <span className="popup__input-error popup__input-link-error" ></span>
-          </fieldset>
-      </>
-    }
-     />    
+        <PopupWithForm
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onCloseOverlay={closePopupOnOverley}
+          name="add-card"
+          title="Новое место"
+          buttonTitle="Создать"
+          children={
+          <>
+              <fieldset className="popup__input-container">
+                <input  className="popup__input" id="popup__input-place" type="text" name="place" defaultValue="" minLength="2" maxLength="30" placeholder="Название" required/>
+                <span className="popup__input-error popup__input-place-error" ></span>
+                <input className="popup__input" id="popup__input-link" type="url" name="link" defaultValue="" placeholder="Ссылка на картинку" required/>
+                <span className="popup__input-error popup__input-link-error" ></span>
+              </fieldset>
+          </>
+        }
+        />    
 
-    <PopupWithForm
-      name="delete-confirm"
-      title="Вы уверены?"
-      buttonTitle="Да"
-      children={
-      <>
-      </>
-    } />    
+        <PopupWithForm
+          name="delete-confirm"
+          title="Вы уверены?"
+          buttonTitle="Да"
+          children={
+          <>
+          </>
+        } />    
 
-    <PopupWithForm
-      isOpen={isEditAvatarPopupOpen}
-      onClose={closeAllPopups}
-      onCloseOverlay={closePopupOnOverley}
-      name="update-avatar"
-      title="Обновить аватар"
-      buttonTitle="Сохранить"
-      children={
-      <>
-          <fieldset className="popup__input-container">
-            <input className="popup__input" id="popup__input-avatar" type="url" name="avatar" defaultValue="" placeholder="Ссылка на аватар" required/>
-            <span className="popup__input-error popup__input-avatar-error" ></span>
-          </fieldset>
-      </>
-    }
-     />    
+        <PopupWithForm
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onCloseOverlay={closePopupOnOverley}
+          name="update-avatar"
+          title="Обновить аватар"
+          buttonTitle="Сохранить"
+          children={
+          <>
+              <fieldset className="popup__input-container">
+                <input className="popup__input" id="popup__input-avatar" type="url" name="avatar" defaultValue="" placeholder="Ссылка на аватар" required/>
+                <span className="popup__input-error popup__input-avatar-error" ></span>
+              </fieldset>
+          </>
+        }
+        />    
 
-    <ImagePopup    
-      card={selectedCard}
-      onClose={closeAllPopups}
-      onCloseOverlay={closePopupOnOverley}
-     />    
+        <ImagePopup    
+          card={selectedCard}
+          onClose={closeAllPopups}
+          onCloseOverlay={closePopupOnOverley}
+        />    
 
-  <Footer />  
+        <Footer /> 
+      </CurrentUserContext.Provider>
+    </div>
   </div>
-</div>
   );
 }
 
