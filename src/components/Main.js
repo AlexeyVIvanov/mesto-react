@@ -18,17 +18,7 @@ function Main(props) {
   //const [userDescription, setUserDescription] = React.useState('');
   //const [userAvatar, setUserAvatar] = React.useState('');
 
-  const [cards, setCards] = React.useState([]);
-
-  function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
-  }
+  
 
   //function handleCardDelete(card) {
     // Определяем, являемся ли мы владельцем текущей карточки
@@ -39,24 +29,7 @@ function Main(props) {
   //      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
   //  });
   //}
-  const handleCardDelete = (card) => {
-    api.deleteConfirmCard(card._id, !isOwn)
-      .then(() => {
-        setCards((cardState) => {
-          return {  
-            cardState: cardState.filter((c) => c._id !== card._id)
-          }
-        });
-      });
-  }
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then((cards) => {        
-        setCards(cards)      
-      })    
-  },
-  []); 
+  
 
   {/*React.useEffect(() => {
     api.getProfile()
@@ -88,13 +61,13 @@ function Main(props) {
         </button>
       </section>
       <section className="elements">
-                
-        {cards.map((card) => (
+         {/* PROPS.CARD???????????????? */}       
+        {props.cards.map((card) => (
         <Card {...card} key={card._id}
         card={card}
         onImagePopup={props.onCardClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
+        onCardLike={props.onCardLike}
+        onCardDelete={props.onCardDelete}
          />
         ))
         }

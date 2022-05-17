@@ -34,7 +34,7 @@ class Api {
 
   }
 
-  editProfile(name, about) {
+  editProfile({name, about}) {
 
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
@@ -54,7 +54,7 @@ class Api {
 
   }
 
-  addCard(name, link) {
+  addCard({name, link}) {
 
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
@@ -128,7 +128,7 @@ class Api {
     }
   }
 
-  updateAvatar(avatar) {
+  updateAvatar({avatar}) {
 
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',

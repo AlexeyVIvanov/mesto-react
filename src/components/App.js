@@ -9,6 +9,8 @@ import { api } from '../utils/Api';
 // Импортируем объект контекста
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
 
@@ -22,6 +24,45 @@ function App() {
   });
 // параметры???????
   const [currentUser, setCurrentUser] = React.useState('');
+  const [cards, setCards] = React.useState([]);
+
+function handleAddPlaceSubmit({name, link}) {
+  api.addCard({name, link})
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      });
+}
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  const handleCardDelete = (card) => {
+    api.deleteConfirmCard(card._id)
+      //, !isOwn)
+      .then(() => {
+        setCards((cardState) => {
+          return {  
+            cardState: cardState.filter((c) => c._id !== card._id)
+          }
+        });
+      });
+  }
+
+  React.useEffect(() => {
+    api.getInitialCards()
+      .then((cards) => {        
+        setCards(cards)      
+      })    
+  },
+  []); 
 
 React.useEffect(() => {
   api.getProfile()
@@ -73,8 +114,16 @@ React.useEffect(() => {
     setIsAddPlacePopupOpen(true);
   }
 
-  function handleUpdateUser(name, about) {
-    api.editProfile(name, about)
+  function handleUpdateUser({name, about}) {
+    api.editProfile({name, about})
+    .then((data) => {      
+      setCurrentUser(data) 
+      closeAllPopups()     
+    })
+  }
+
+  function handleUpdateAvatar({avatar}) {
+    api.updateAvatar({avatar})
     .then((data) => {      
       setCurrentUser(data) 
       closeAllPopups()     
@@ -91,32 +140,22 @@ React.useEffect(() => {
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick} />    
+          onCardClick={handleCardClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete} />    
 
         <EditProfilePopup
          isOpen={isEditProfilePopupOpen}
          onClose={closeAllPopups}
          onCloseOverlay={closePopupOnOverley}
-         onUpdateUser={handleUpdateUser} />    
+         onUpdateUser={handleUpdateUser} />  
 
-        <PopupWithForm
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onCloseOverlay={closePopupOnOverley}
-          name="add-card"
-          title="Новое место"
-          buttonTitle="Создать"
-          children={
-          <>
-              <fieldset className="popup__input-container">
-                <input  className="popup__input" id="popup__input-place" type="text" name="place" defaultValue="" minLength="2" maxLength="30" placeholder="Название" required/>
-                <span className="popup__input-error popup__input-place-error" ></span>
-                <input className="popup__input" id="popup__input-link" type="url" name="link" defaultValue="" placeholder="Ссылка на картинку" required/>
-                <span className="popup__input-error popup__input-link-error" ></span>
-              </fieldset>
-          </>
-        }
-        />    
+        <AddPlacePopup
+         isOpen={isAddPlacePopupOpen}
+         onClose={closeAllPopups}
+         onCloseOverlay={closePopupOnOverley}
+         onAddPlace={handleAddPlaceSubmit} />              
 
         <PopupWithForm
           name="delete-confirm"
@@ -125,24 +164,13 @@ React.useEffect(() => {
           children={
           <>
           </>
-        } />    
+        } />
 
-        <PopupWithForm
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onCloseOverlay={closePopupOnOverley}
-          name="update-avatar"
-          title="Обновить аватар"
-          buttonTitle="Сохранить"
-          children={
-          <>
-              <fieldset className="popup__input-container">
-                <input className="popup__input" id="popup__input-avatar" type="url" name="avatar" defaultValue="" placeholder="Ссылка на аватар" required/>
-                <span className="popup__input-error popup__input-avatar-error" ></span>
-              </fieldset>
-          </>
-        }
-        />    
+        <EditAvatarPopup
+         isOpen={isEditAvatarPopupOpen}
+         onClose={closeAllPopups}
+         onCloseOverlay={closePopupOnOverley}
+         onUpdateAvatar={handleUpdateAvatar} />            
 
         <ImagePopup    
           card={selectedCard}
