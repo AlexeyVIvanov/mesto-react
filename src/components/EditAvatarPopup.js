@@ -4,10 +4,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 import PopupWithForm from './PopupWithForm';
 
-function EditAvatarPopup(props) {  
-
- // const [avatar, setAvatar] = React.useState('');
-
+function EditAvatarPopup(props) {
   // Подписка на контекст
   const currentUser = React.useContext(CurrentUserContext);
 
@@ -32,7 +29,7 @@ function EditAvatarPopup(props) {
           isOpen={props.isOpen}
           onClose={props.onClose}
           onCloseOverlay={props.onCloseOverlay}
-          /* handleSubmit????????? */
+          
           onSubmit={handleSubmit}   
           name="update-avatar"
           title="Обновить аватар"

@@ -89,16 +89,6 @@ class Api {
 
   }
 
-  //deleteLikes(id) {
-    
-
-  //}
-
-  //addLikes(id) {
-    
-
-  //}
-
   changeLikeCardStatus(id, isLiked) {
     if(!isLiked) {
       return fetch(`${this._baseUrl}/cards/${id}/likes`, {

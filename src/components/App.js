@@ -22,15 +22,17 @@ function App() {
     name: "",
     link: ""
   });
-// параметры???????
+
   const [currentUser, setCurrentUser] = React.useState('');
   const [cards, setCards] = React.useState([]);
+
 
 function handleAddPlaceSubmit({name, link}) {
   api.addCard({name, link})
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
+        
       });
 }
 
@@ -48,11 +50,7 @@ function handleAddPlaceSubmit({name, link}) {
     api.deleteConfirmCard(card._id)
       //, !isOwn)
       .then(() => {
-        setCards((cardState) => {
-          return {  
-            cardState: cardState.filter((c) => c._id !== card._id)
-          }
-        });
+        setCards(cards.filter(item => item._id !== card._id));
       });
   }
 
@@ -133,7 +131,7 @@ React.useEffect(() => {
   return (
   <div className="root common">
     <div className="page">
-        {/* или [currentUser]? */}
+        
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Main

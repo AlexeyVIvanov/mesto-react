@@ -4,43 +4,13 @@ import editButton from '../images/edit-button.svg';
 import addButton from '../images/add-button.svg';
 import editAvatar from '../images/edit-avatar.svg';
 
-import { api } from '../utils/Api';
-
 import Card from './Card';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main(props) {
 
-  const currentUser = React.useContext(CurrentUserContext);
-  
-  //const [userName, setUserName] = React.useState('');
-  //const [userDescription, setUserDescription] = React.useState('');
-  //const [userAvatar, setUserAvatar] = React.useState('');
-
-  
-
-  //function handleCardDelete(card) {
-    // Определяем, являемся ли мы владельцем текущей карточки
-  //  const isOwn = card.owner._id === currentUser._id;
-    
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-   // api.deleteConfirmCard(card._id, !isOwn).then((newCard) => {
-  //      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-  //  });
-  //}
-  
-
-  {/*React.useEffect(() => {
-    api.getProfile()
-      .then((data) => {
-        
-        setUserName(data.name)
-        setUserDescription(data.about)
-        setUserAvatar(data.avatar)
-      })    
-  },
-[]); */}
+  const currentUser = React.useContext(CurrentUserContext);  
   
   return (
     <main>
@@ -61,7 +31,7 @@ function Main(props) {
         </button>
       </section>
       <section className="elements">
-         {/* PROPS.CARD???????????????? */}       
+                
         {props.cards.map((card) => (
         <Card {...card} key={card._id}
         card={card}
