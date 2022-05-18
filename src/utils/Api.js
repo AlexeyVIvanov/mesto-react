@@ -6,17 +6,21 @@ class Api {
 
   }
 
-  getProfile() {
-    return fetch(`${this._baseUrl}/users/me`, {
-    headers: this._headers
-    })
-    .then(res => {
+  _checkResponse(res) {
+    
       if (res.ok) {
         return res.json();
       }
       // если ошибка, отклоняем промис
       return Promise.reject(`Ошибка: ${res.status}`);
+    
+}
+
+  getProfile() {
+    return fetch(`${this._baseUrl}/users/me`, {
+    headers: this._headers
     })
+    .then(this._checkResponse)
 
   }
 
@@ -24,13 +28,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers
     })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(this._checkResponse)
 
   }
 
@@ -44,13 +42,7 @@ class Api {
         about
       })
     })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(this._checkResponse)
 
   }
 
@@ -64,13 +56,7 @@ class Api {
         link
       })
     })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(this._checkResponse)
 
   }
 
@@ -79,13 +65,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers
     })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(this._checkResponse)
 
   }
 
@@ -95,26 +75,15 @@ class Api {
         method: 'DELETE',
         headers: this._headers
       })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-      })
+      .then(this._checkResponse)
       
     } else {
       return fetch(`${this._baseUrl}/cards/${id}/likes`, {
         method: 'PUT',
         headers: this._headers
       })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-      return Promise.reject(`Ошибка: ${res.status}`);
-      })
+      .then(this._checkResponse)
+
     }
   }
 
@@ -127,13 +96,7 @@ class Api {
         avatar
       })
     })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(this._checkResponse)
 
   }
 

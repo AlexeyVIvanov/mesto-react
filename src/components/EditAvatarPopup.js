@@ -1,18 +1,14 @@
 import React from 'react';
 
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-
 import PopupWithForm from './PopupWithForm';
 
-function EditAvatarPopup(props) {
-  // Подписка на контекст
-  const currentUser = React.useContext(CurrentUserContext);
+function EditAvatarPopup(props) {  
 
   const avatarRef = React.useRef();
 
   React.useEffect(() => {
     avatarRef.current.value='';    
-  }, [currentUser]);
+  }, [props.isOpen]);
 
   function handleSubmit(e) {
     // Запрещаем браузеру переходить по адресу формы

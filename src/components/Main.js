@@ -16,7 +16,7 @@ function Main(props) {
     <main>
       <section className="profile">
         <img  className="profile__overlay" src={editAvatar} alt="Карандаш"/>
-        <img style={{ backgroundImage: `url(${currentUser.avatar})` }} onClick={props.onEditAvatar} className="profile__avatar" src={currentUser.avatar} alt="Аватар"/>
+        <img onClick={props.onEditAvatar} className="profile__avatar" src={currentUser.avatar} alt="Аватар"/>
         <div className="profile__info">        
           <div className="profile__container">
             <h1 className="profile__title">{currentUser.name}</h1>

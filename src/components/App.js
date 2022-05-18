@@ -23,7 +23,7 @@ function App() {
     link: ""
   });
 
-  const [currentUser, setCurrentUser] = React.useState('');
+  const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
 
@@ -33,7 +33,10 @@ function handleAddPlaceSubmit({name, link}) {
         setCards([newCard, ...cards]);
         closeAllPopups();
         
-      });
+      })
+      .catch((err) => {
+        console.log(err); // выведем ошибку в консоль
+      })
 }
 
   function handleCardLike(card) {
@@ -41,9 +44,13 @@ function handleAddPlaceSubmit({name, link}) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    api.changeLikeCardStatus(card._id, !isLiked)
+    .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+    })
+    .catch((err) => {
+      console.log(err); // выведем ошибку в консоль
+    })
   }
 
   const handleCardDelete = (card) => {
@@ -51,13 +58,19 @@ function handleAddPlaceSubmit({name, link}) {
       //, !isOwn)
       .then(() => {
         setCards(cards.filter(item => item._id !== card._id));
-      });
+      })
+      .catch((err) => {
+        console.log(err); // выведем ошибку в консоль
+      })
   }
 
   React.useEffect(() => {
     api.getInitialCards()
       .then((cards) => {        
         setCards(cards)      
+      })
+      .catch((err) => {
+        console.log(err); // выведем ошибку в консоль
       })    
   },
   []); 
@@ -66,6 +79,9 @@ React.useEffect(() => {
   api.getProfile()
     .then((data) => {      
       setCurrentUser(data)      
+    })
+    .catch((err) => {
+      console.log(err); // выведем ошибку в консоль
     })    
 },
 []);
@@ -118,6 +134,9 @@ React.useEffect(() => {
       setCurrentUser(data) 
       closeAllPopups()     
     })
+    .catch((err) => {
+      console.log(err); // выведем ошибку в консоль
+    })
   }
 
   function handleUpdateAvatar({avatar}) {
@@ -125,6 +144,9 @@ React.useEffect(() => {
     .then((data) => {      
       setCurrentUser(data) 
       closeAllPopups()     
+    })
+    .catch((err) => {
+      console.log(err); // выведем ошибку в консоль
     })
   }
 
@@ -159,10 +181,7 @@ React.useEffect(() => {
           name="delete-confirm"
           title="Вы уверены?"
           buttonTitle="Да"
-          children={
-          <>
-          </>
-        } />
+          />
 
         <EditAvatarPopup
          isOpen={isEditAvatarPopupOpen}
