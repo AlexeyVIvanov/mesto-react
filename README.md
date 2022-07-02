@@ -14,4 +14,4 @@
 В дальнейшем будут реализованы задания следующего этапа обучения.
 
 ## H2 Ссылка
- [MESTO](https://github.com/AlexeyVIvanov/mesto-react)  
+ [MESTO](https://alexeyvivanov.github.io/mesto-react/)  
